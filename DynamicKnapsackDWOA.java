@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class DynamicKnapsackDWOA {
     private final static int maxCapacity = 1500;
+    private static final Random random = new Random();
 
     public static int knapsackValue(int[] solution, int[] values, int[] weights, int groupNum) {
         int totalValue = 0;
@@ -157,7 +158,6 @@ public class DynamicKnapsackDWOA {
         while (t < maxIteration){
             double a = 2 * (1 - (double) t / maxIteration);
             for (int i  = 0; i < N; i++){
-                Random random = new Random();
                 double r = random.nextDouble();
                 double A = r * 2 * a - a;
                 double C = 2 * r;
@@ -190,12 +190,7 @@ public class DynamicKnapsackDWOA {
 
                 //Boundary checking
                 for (int j = 0; j < itemCount/3; j++) {
-                    if (whale[i][j] > ub){
-                        whale[i][j] = ub;
-                    }
-                    else if (whale[i][j] < lb){
-                        whale[i][j] = lb;
-                    }
+                    whale[i][j] = Math.min(Math.max(whale[i][j], lb), ub);
                 }
                 phiWhale[i] = phi(whale[i], m);
                 phiWhale[i] = NROA(phiWhale[i], weight, indices);

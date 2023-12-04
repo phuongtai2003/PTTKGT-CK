@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class KnapsackDWOA {
     private final static int maxCapacity = 800;
+    private static final Random random = new Random();
 
     public static int[] GROA(int[] solution, int[] weight, Integer[] indices) {
         int currentWeight = 0;
@@ -135,7 +136,6 @@ public class KnapsackDWOA {
         while (t < maxIteration){
             double a = 2 * (1 - (double) t / maxIteration);
             for (int i  = 0; i < N; i++){
-                Random random = new Random();
                 double r = random.nextDouble();
                 double A = r * 2 * a - a;
                 double C = 2 * r;
