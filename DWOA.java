@@ -9,12 +9,12 @@ public class DWOA {
         for (int i = 0; i < setSelection.length; i++) {
             if (setSelection[i] == 1) {
                 totalCost += setCosts[i];
+                if (totalCost > 200) {
+                    return 0;
+                }
             }
         }
-        if(totalCost < 100 || totalCost > 200){
-            return 0;
-        }
-        return totalCost;
+        return (totalCost >= 100) ? totalCost : 0;
     }
 
     public static double[][] generateWhale(int N,int ub, int lb, int dim) {
