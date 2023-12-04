@@ -2,6 +2,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class WOA {
+    private static final Random random = new Random();
+
     public static double fitnessFunction(double[] whale){
         double sum = 0;
         for (double j : whale) {
@@ -36,7 +38,6 @@ public class WOA {
         while (t < maxIteration){
             double a = 2 * (1 - (double) t / maxIteration);
             for (int i  = 0; i < N; i++){
-                Random random = new Random();
                 double r = random.nextDouble();
                 double A = r * 2 * a - a;
                 double C = 2 * r;

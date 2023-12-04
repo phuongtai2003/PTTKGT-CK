@@ -3,6 +3,7 @@ import java.util.Random;
 
 public class DWOA {
     private final static int[] setCosts = {50, 100, 20, 50, 30, 40, 60, 100, 80, 90};
+    private static final Random random = new Random();
 
     public static int setCoverCost(int[] setSelection, int[] setCosts) {
         int totalCost = 0;
@@ -92,7 +93,6 @@ public class DWOA {
         while (t < maxIteration){
             double a = 2 * (1 - (double) t / maxIteration);
             for (int i  = 0; i < N; i++){
-                Random random = new Random();
                 double r = random.nextDouble();
                 double A = r * 2 * a - a;
                 double C = 2 * r;
