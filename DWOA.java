@@ -157,9 +157,9 @@ public class DWOA {
         int lb = 0; // Lower bound for the whale generation
         int maxIteration = 100; // Maximum number of iterations
 
-        int minSetSize = 5; // Minimum set size to start with
-        int maxSetSize = 10; // Maximum set size to test
-        int stepSize = 1; // Step size for varying set sizes
+        int minSetSize = 300; // Minimum set size to start with
+        int maxSetSize = 1000; // Maximum set size to test
+        int stepSize = (maxSetSize - minSetSize) / 100; // Step size for varying set sizes
 
         ArrayList<Integer> setSizesTested = new ArrayList<>();
         ArrayList<Long> executionTimes = new ArrayList<>();

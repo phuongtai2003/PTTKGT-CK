@@ -91,9 +91,9 @@ public class WOA {
     }
 
     public static void main(String[] args) {
-        int minDim = 10; // Minimum dimension to start with
-        int maxDim = 100; // Maximum dimension to test
-        int step = 10; // Step size to increase the dimension in each iteration
+        int minDim = 300; // Minimum dimension to start with
+        int maxDim = 1000; // Maximum dimension to test
+        int step = (maxDim - minDim) / 100; // Step size to increase the dimension in each iteration
         int N = 50; // Number of whales
         int ub = 5; // Upper bound for the whale generation
         int lb = -5; // Lower bound for the whale generation
