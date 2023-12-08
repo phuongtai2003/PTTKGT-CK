@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class DWOA {
     private final static int[] setCosts = {50, 100, 20, 50, 30, 40, 60, 100, 80, 90};
@@ -8,6 +9,9 @@ public class DWOA {
     public static int setCoverCost(int[] setSelection, int[] setCosts) {
         int totalCost = 0;
         for (int i = 0; i < setSelection.length; i++) {
+            if (i >= setCosts.length) {
+                break;  // Avoid accessing an index out of bounds
+            }
             if (setSelection[i] == 1) {
                 totalCost += setCosts[i];
                 if (totalCost > 200) {
@@ -148,13 +152,33 @@ public class DWOA {
     }
 
     public static void main(String[] args) {
-        int N = 500;
-        int ub = 10;
-        int lb = 0;
-        int dim = 10;
-        int maxIteration = 100;
-        for (int i = 0; i < setCosts.length; i++) {
-            discreteWhaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration, setCosts);
+        int N = 50; // Number of whales
+        int ub = 1; // Upper bound for the whale generation
+        int lb = 0; // Lower bound for the whale generation
+        int maxIteration = 100; // Maximum number of iterations
+
+        int minSetSize = 5; // Minimum set size to start with
+        int maxSetSize = 10; // Maximum set size to test
+        int stepSize = 1; // Step size for varying set sizes
+
+        ArrayList<Integer> setSizesTested = new ArrayList<>();
+        ArrayList<Long> executionTimes = new ArrayList<>();
+
+        for (int setSize = minSetSize; setSize <= maxSetSize; setSize += stepSize) {
+            System.out.println("Running DWOA with set size = " + setSize);
+            long startTime = System.currentTimeMillis();
+
+            discreteWhaleOptimizationAlgorithm(N, ub, lb, setSize, maxIteration, Arrays.copyOf(setCosts, setSize));
+
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            System.out.println("Execution time for set size " + setSize + ": " + duration + "ms");
+
+            setSizesTested.add(setSize);
+            executionTimes.add(duration);
         }
+
+        System.out.println("Tested set sizes: " + setSizesTested);
+        System.out.println("Execution times: " + executionTimes);
     }
 }

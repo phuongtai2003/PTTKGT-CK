@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class WOA {
     private static final Random random = new Random();
@@ -90,11 +91,32 @@ public class WOA {
     }
 
     public static void main(String[] args) {
-        int N = 2000;
-        int ub = 20;
-        int lb = -20;
-        int dim = 2;
-        int maxIteration = 200;
-        whaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration);
+        int minDim = 10; // Minimum dimension to start with
+        int maxDim = 100; // Maximum dimension to test
+        int step = 10; // Step size to increase the dimension in each iteration
+        int N = 50; // Number of whales
+        int ub = 5; // Upper bound for the whale generation
+        int lb = -5; // Lower bound for the whale generation
+        int maxIteration = 100; // Maximum number of iterations
+
+        ArrayList<Integer> dimensionsTested = new ArrayList<>();
+        ArrayList<Long> executionTimes = new ArrayList<>();
+
+        for (int dim = minDim; dim <= maxDim; dim += step) {
+            System.out.println("Running Whale Optimization Algorithm with dimension = " + dim);
+            long startTime = System.currentTimeMillis();
+
+            whaleOptimizationAlgorithm(N, ub, lb, dim, maxIteration);
+
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            System.out.println("Execution time for dimension " + dim + ": " + duration + "ms");
+
+            dimensionsTested.add(dim);
+            executionTimes.add(duration);
+        }
+
+        System.out.println("Tested dimensions: " + dimensionsTested);
+        System.out.println("Execution times: " + executionTimes);
     }
 }

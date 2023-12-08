@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -192,28 +193,43 @@ public class KnapsackDWOA {
     }
 
     public static void main(String[] args) {
-        int itemCount = 10;
-        int minWeight = 50;
-        int maxWeight = 200;
-        int minValue = 200;
-        int maxValue = 500;
-
-        int[] weights = new int[itemCount];
-        int[] values = new int[itemCount];
-
-        Random random = new Random(0);
-
-        for (int i = 0; i < itemCount; i++) {
-            weights[i] = random.nextInt(maxWeight - minWeight + 1) + minWeight;
-            values[i] = random.nextInt(maxValue - minValue + 1) + minValue;
+        int minItem = 300; // Minimum number of items to start with
+        int maxItem = 1000; // Maximum number of items to go up to
+        int step = (maxItem - minItem) / 100; // Calculate the step to generate 500 values
+        int N = 50; // Number of whales
+        int ub = 1; // Upper bound for the whale generation
+        int lb = 0; // Lower bound for the whale generation
+        int maxIteration = 100; // Maximum number of iterations
+    
+        Random random = new Random();
+        int maxWeight = 50;
+        int maxValue = 100;
+    
+        // Generate weights and values for the maximum number of items
+        int[] weights = new int[maxItem];
+        int[] values = new int[maxItem];
+        for (int i = 0; i < maxItem; i++) {
+            weights[i] = random.nextInt(maxWeight) + 1; // Weights are between 1 and maxWeight
+            values[i] = random.nextInt(maxValue) + 1; // Values are between 1 and maxValue
         }
-        int N = 50;
-        int ub = 1;
-        int lb = 0;
-        int dim = values.length;
-        int maxIteration = 300;
-        for (int i = 0; i < 10; i++){
-            discreteWhaleOptimizationAlgorithm(N, ub, lb, dim, maxIteration, weights, values);
+
+        ArrayList<Integer> inputSizes = new ArrayList<>();
+        ArrayList<Long> actualRuntime = new ArrayList<>();
+    
+        for (int itemCount = minItem; itemCount <= maxItem; itemCount += step) {
+            int dim = itemCount;
+            System.out.println("Running KnapsackDWOA with itemCount = " + itemCount);
+            long startTime = System.currentTimeMillis();
+    
+            discreteWhaleOptimizationAlgorithm(N, ub, lb, dim, maxIteration, Arrays.copyOf(weights, itemCount), Arrays.copyOf(values, itemCount));
+    
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            System.out.println("Total execution time for itemCount " + itemCount + ": " + duration + "ms");
+            inputSizes.add(itemCount);
+            actualRuntime.add(duration);
         }
-    }
+        System.out.println("Input sizes: " + inputSizes + "\n");
+        System.out.println("Actual runtime: " + actualRuntime);
+    }    
 }
