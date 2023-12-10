@@ -110,13 +110,13 @@ public class WOA {
         int ub = 20;
         int lb = -20;
         int minDim = 1000;
-        int maxDim = 100000;
+        int maxDim = 10000;
         int maxIteration = 200;
 
         ArrayList<Integer> setSizesTested = new ArrayList<>();
         ArrayList<Long> executionTimes = new ArrayList<>();
 
-        for(int dim = minDim; dim <= maxDim; dim += 1000){
+        for(int dim = minDim; dim <= maxDim; dim += 100){
             long startTime = System.currentTimeMillis();
             whaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration);
             long endTime = System.currentTimeMillis();

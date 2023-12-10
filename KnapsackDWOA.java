@@ -224,13 +224,13 @@ public class KnapsackDWOA {
     }
 
     public static void main(String[] args) {
-        int minItemCount = 10;
-        int maxItemCount = 10000;
+        int minItemCount = 100;
+        int maxItemCount = 1000;
         int minWeight = 50;
         int maxWeight = 200;
         int minValue = 200;
         int maxValue = 500;
-        int N = 50;
+        int N = 1000;
         int ub = 1;
         int lb = 0;
         int maxIteration = 300;
@@ -239,7 +239,7 @@ public class KnapsackDWOA {
         ArrayList<Integer> setSizesTested = new ArrayList<>();
         ArrayList<Long> executionTimes = new ArrayList<>();
 
-        for(int itemCount = minItemCount; itemCount <= maxItemCount; itemCount += 100){
+        for(int itemCount = minItemCount; itemCount <= maxItemCount; itemCount += 10){
             int[][] generated = DataSetGenerator.generateForKnapsack(itemCount, minValue, maxValue, minWeight, maxWeight);
             int[] weights = generated[0];
             int[] values = generated[1];

@@ -174,12 +174,12 @@ public class DWOA {
         int ub = 10;
         int lb = 0;
         int minDim = 1000;
-        int maxDim = 100000;
+        int maxDim = 10000;
         int maxIteration = 100;
         ArrayList<Integer> setSizesTested = new ArrayList<>();
         ArrayList<Long> executionTimes = new ArrayList<>();
 
-        for(int dim = minDim; dim <= maxDim; dim += 1000){
+        for(int dim = minDim; dim <= maxDim; dim += 100){
             int[] setCosts = DataSetGenerator.generateSetCosts(dim, 1, 10);
             long startTime = System.currentTimeMillis();
             discreteWhaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration, setCosts);

@@ -249,7 +249,7 @@ public class DiscountedKnapsackDWOA {
 
     public static void main(String[] args) {
         int minGroupNum = 10;
-        int maxGroupNum = 10000;
+        int maxGroupNum = 300;
         int minWeight = 50;
         int maxWeight = 200;
         int minValue = 200;
@@ -261,7 +261,7 @@ public class DiscountedKnapsackDWOA {
         ArrayList<Integer> setSizesTested = new ArrayList<>();
         ArrayList<Long> executionTimes = new ArrayList<>();
 
-        for(int groupNum = minGroupNum; groupNum <= maxGroupNum; groupNum *= 10){
+        for(int groupNum = minGroupNum; groupNum <= maxGroupNum; groupNum += 5){
             int[][] generateResults = DataSetGenerator.generateForDiscountedKnapsack(groupNum, minValue, maxValue, minWeight, maxWeight);
             int[] weights = generateResults[0];
             int[] profits = generateResults[1];
