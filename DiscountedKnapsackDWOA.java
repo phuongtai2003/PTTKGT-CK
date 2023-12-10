@@ -247,30 +247,27 @@ public class DiscountedKnapsackDWOA {
     }
 
     public static void main(String[] args) {
-        int groupNum = 20;
-        int itemCount = 3 * groupNum;
+        int minGroupNum = 10;
+        int maxGroupNum = 10000;
         int minWeight = 50;
         int maxWeight = 200;
         int minValue = 200;
         int maxValue = 500;
-
-        int[] weights = new int[itemCount];
-        int[] profits = new int[itemCount];
-        Random rand = new Random(0);
-        for (int i = 0; i < groupNum; i++) {
-            int idx = 3 * i;
-            weights[idx] = rand.nextInt(maxWeight - minWeight + 1) + minWeight;
-            profits[idx] = rand.nextInt(maxValue - minValue) + minValue;
-            weights[idx + 1] = rand.nextInt(maxWeight - minWeight + 1) + minWeight;
-            profits[idx + 1] = rand.nextInt(maxValue - minValue) + minValue;
-        }
-
-        int N = 30;
+        int N = 1000;
         int ub = 3;
         int lb = 0;
         int maxIteration = 500;
 
-        discreteWhaleOptimizationAlgorithm(N, ub, lb, itemCount, maxIteration, weights, profits);
+        for(int groupNum = minGroupNum; groupNum <= maxGroupNum; groupNum *= 10){
+            int[][] generateResults = DataSetGenerator.generateForDiscountedKnapsack(groupNum, minValue, maxValue, minWeight, maxWeight);
+            int[] weights = generateResults[0];
+            int[] profits = generateResults[1];
+            int itemCount = 3 * groupNum;
+
+            discreteWhaleOptimizationAlgorithm(N, ub, lb, itemCount, maxIteration, weights, profits);
+        }
+
+
 
     }
 }

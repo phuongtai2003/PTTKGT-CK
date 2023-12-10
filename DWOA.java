@@ -1,8 +1,8 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public class DWOA {
-    private final static int[] setCosts = {50, 100, 20, 50, 30, 40, 60, 100, 80, 90};
     // Input: setSelection is a possible solution
     //        setCosts is the cost of each set
     // Output: sum of the set cost
@@ -170,11 +170,25 @@ public class DWOA {
     }
 
     public static void main(String[] args) {
-        int N = 100000;
+        int N = 1000;
         int ub = 10;
         int lb = 0;
-        int dim = 10;
+        int minDim = 1000;
+        int maxDim = 100000;
         int maxIteration = 100;
-        discreteWhaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration, setCosts);
+        ArrayList<Integer> setSizesTested = new ArrayList<>();
+        ArrayList<Long> executionTimes = new ArrayList<>();
+
+        for(int dim = minDim; dim <= maxDim; dim += 1000){
+            int[] setCosts = DataSetGenerator.generateSetCosts(dim, 1, 10);
+            long startTime = System.currentTimeMillis();
+            discreteWhaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration, setCosts);
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+            setSizesTested.add(dim);
+            executionTimes.add(executionTime);
+        }
+        System.out.println("Set sizes tested: " + setSizesTested);
+        System.out.println("Execution times: " + executionTimes);
     }
 }

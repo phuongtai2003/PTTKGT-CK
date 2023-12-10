@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -223,28 +224,33 @@ public class KnapsackDWOA {
     }
 
     public static void main(String[] args) {
-        int itemCount = 10;
+        int minItemCount = 10;
+        int maxItemCount = 10000;
         int minWeight = 50;
         int maxWeight = 200;
         int minValue = 200;
         int maxValue = 500;
-
-        int[] weights = new int[itemCount];
-        int[] values = new int[itemCount];
-
-        Random random = new Random(0);
-
-        for (int i = 0; i < itemCount; i++) {
-            weights[i] = random.nextInt(maxWeight - minWeight + 1) + minWeight;
-            values[i] = random.nextInt(maxValue - minValue + 1) + minValue;
-        }
         int N = 50;
         int ub = 1;
         int lb = 0;
-        int dim = values.length;
         int maxIteration = 300;
-        for (int i = 0; i < 10; i++){
-            discreteWhaleOptimizationAlgorithm(N, ub, lb, dim, maxIteration, weights, values);
+
+
+        ArrayList<Integer> setSizesTested = new ArrayList<>();
+        ArrayList<Long> executionTimes = new ArrayList<>();
+
+        for(int itemCount = minItemCount; itemCount <= maxItemCount; itemCount += 100){
+            int[][] generated = DataSetGenerator.generateForKnapsack(itemCount, minValue, maxValue, minWeight, maxWeight);
+            int[] weights = generated[0];
+            int[] values = generated[1];
+            long startTime = System.currentTimeMillis();
+            discreteWhaleOptimizationAlgorithm(N,ub,lb,itemCount,maxIteration, weights, values);
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+            setSizesTested.add(itemCount);
+            executionTimes.add(executionTime);
         }
+        System.out.println("Set sizes tested: " + setSizesTested);
+        System.out.println("Execution times: " + executionTimes);
     }
 }

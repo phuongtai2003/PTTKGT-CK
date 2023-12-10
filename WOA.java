@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -105,13 +106,27 @@ public class WOA {
     }
 
     public static void main(String[] args) {
-        int N = 10000000;
+        int N = 1000;
         int ub = 20;
         int lb = -20;
-        int dim = 2;
+        int minDim = 1000;
+        int maxDim = 100000;
         int maxIteration = 200;
-        long startTime = System.currentTimeMillis();
-        whaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration);
-        System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + "ms");
+
+        ArrayList<Integer> setSizesTested = new ArrayList<>();
+        ArrayList<Long> executionTimes = new ArrayList<>();
+
+        for(int dim = minDim; dim <= maxDim; dim += 1000){
+            long startTime = System.currentTimeMillis();
+            whaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration);
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+            setSizesTested.add(dim);
+            executionTimes.add(executionTime);
+        }
+
+        System.out.println("Set sizes tested: " + setSizesTested);
+        System.out.println("Execution times: " + executionTimes);
+
     }
 }
