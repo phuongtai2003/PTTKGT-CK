@@ -1,12 +1,15 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
 public class KnapsackDWOA {
     private final static int maxCapacity = 800;
-    private static final Random random = new Random();
 
+    // Input: solution is a possible solution
+    //        weight is the weights of the items
+    //        indices is the indices of the items, sorted descendingly by density
+    // Output: a feasible solution
+    // Description: Turn a potential solution into a feasible solution
     public static int[] GROA(int[] solution, int[] weight, Integer[] indices) {
         int currentWeight = 0;
 
@@ -30,6 +33,11 @@ public class KnapsackDWOA {
         return solution;
     }
 
+    // Input: items is an array of possible solution
+    //        values is the profits of the items
+    //        weights is the weights of the items
+    // Output: sum of the profits of the items
+    // Description: Calculate the total profits for the knapsack if weight does not exceed the capacity
     public static int knapsackValue(int[] items, int[] values, int[] weights) {
         int totalValue = 0;
         int totalWeight = 0;
@@ -44,7 +52,12 @@ public class KnapsackDWOA {
         }
         return totalValue;
     }
-
+    // Input: N is the number of whales
+    //        ub is the upper bound
+    //        lb is the lower bound
+    //        dim is the dimension
+    // Output: The whale population
+    // Description: Generate the whale based on the upper bound and lower bound of the dimension
     public static double[][] generateWhale(int N,int ub, int lb, int dim) {
         double[][] whale = new double[N][dim];
         for (int i = 0; i < N; i++) {
@@ -54,9 +67,16 @@ public class KnapsackDWOA {
         }
         return whale;
     }
+    // Input: x is an element in a whale
+    // Output: vNew
+    // Description: Calculate the vNew
     public static double vNew(double x) {
         return Math.abs(Math.exp(x) - 1) / (Math.exp(x) + 1);
     }
+    // Input: X is a continuous whale
+    //        m is the maximum value in each whale
+    // Output: Y is the new discrete whale
+    // Description: Transfer from a continuous whale to a new discrete whale
     public static int[] phi(double[] X, int[] m) {
         int n = X.length;
         int[] Y = new int[n];
@@ -93,6 +113,15 @@ public class KnapsackDWOA {
         return Y;
     }
 
+    // Input: N is the number of whales
+    //        ub is the upper bound
+    //        lb is the lower bound
+    //        dim is the dimension
+    //        maxIteration is the maximum iteration
+    //        weight is the weights of the items
+    //        value is the profits of the items
+    // Output: best whale and best whale position
+    // Description: Finding the best whale and best whale position based on the 0 - 1 knapsack problem
     public static void discreteWhaleOptimizationAlgorithm(int N, int ub, int lb, int dim, int maxIteration, int[] weight, int[] value) {
         Integer[] indices = new Integer[dim];
         for (int i = 0; i < dim; i++) {
@@ -137,6 +166,7 @@ public class KnapsackDWOA {
         while (t < maxIteration){
             double a = 2 * (1 - (double) t / maxIteration);
             for (int i  = 0; i < N; i++){
+                Random random = new Random();
                 double r = random.nextDouble();
                 double A = r * 2 * a - a;
                 double C = 2 * r;
@@ -145,13 +175,13 @@ public class KnapsackDWOA {
                 double l = (random.nextDouble() * 2) - 1;
                 if (p < 0.5){
                     if (Math.abs(A) < 1){
-                        //Search for prey updating position (6)
+                        //Encircling prey updating position (6)
                         for (int j = 0; j < dim; j++) {
                             whale[i][j] = bestWhalePositionX[j] - A * Math.abs(C * bestWhalePositionX[j] - whale[i][j]);
                         }
                     }
                     else if (Math.abs(A) >= 1){
-                        //Encircling prey updating position (13)
+                        //Searching for prey updating position (13)
                         int rand = random.nextInt(N);
                         while (rand == i){
                             rand = random.nextInt(N);
@@ -193,43 +223,28 @@ public class KnapsackDWOA {
     }
 
     public static void main(String[] args) {
-        int minItem = 300; // Minimum number of items to start with
-        int maxItem = 1000; // Maximum number of items to go up to
-        int step = (maxItem - minItem) / 100; // Calculate the step to generate 500 values
-        int N = 50; // Number of whales
-        int ub = 1; // Upper bound for the whale generation
-        int lb = 0; // Lower bound for the whale generation
-        int maxIteration = 100; // Maximum number of iterations
-    
-        Random random = new Random();
-        int maxWeight = 50;
-        int maxValue = 100;
-    
-        // Generate weights and values for the maximum number of items
-        int[] weights = new int[maxItem];
-        int[] values = new int[maxItem];
-        for (int i = 0; i < maxItem; i++) {
-            weights[i] = random.nextInt(maxWeight) + 1; // Weights are between 1 and maxWeight
-            values[i] = random.nextInt(maxValue) + 1; // Values are between 1 and maxValue
-        }
+        int itemCount = 10;
+        int minWeight = 50;
+        int maxWeight = 200;
+        int minValue = 200;
+        int maxValue = 500;
 
-        ArrayList<Integer> inputSizes = new ArrayList<>();
-        ArrayList<Long> actualRuntime = new ArrayList<>();
-    
-        for (int itemCount = minItem; itemCount <= maxItem; itemCount += step) {
-            int dim = itemCount;
-            System.out.println("Running KnapsackDWOA with itemCount = " + itemCount);
-            long startTime = System.currentTimeMillis();
-    
-            discreteWhaleOptimizationAlgorithm(N, ub, lb, dim, maxIteration, Arrays.copyOf(weights, itemCount), Arrays.copyOf(values, itemCount));
-    
-            long endTime = System.currentTimeMillis();
-            long duration = endTime - startTime;
-            System.out.println("Total execution time for itemCount " + itemCount + ": " + duration + "ms");
-            inputSizes.add(itemCount);
-            actualRuntime.add(duration);
+        int[] weights = new int[itemCount];
+        int[] values = new int[itemCount];
+
+        Random random = new Random(0);
+
+        for (int i = 0; i < itemCount; i++) {
+            weights[i] = random.nextInt(maxWeight - minWeight + 1) + minWeight;
+            values[i] = random.nextInt(maxValue - minValue + 1) + minValue;
         }
-        System.out.println("Input sizes: " + inputSizes + "\n");
-        System.out.println("Actual runtime: " + actualRuntime);
-    }    
+        int N = 50;
+        int ub = 1;
+        int lb = 0;
+        int dim = values.length;
+        int maxIteration = 300;
+        for (int i = 0; i < 10; i++){
+            discreteWhaleOptimizationAlgorithm(N, ub, lb, dim, maxIteration, weights, values);
+        }
+    }
 }

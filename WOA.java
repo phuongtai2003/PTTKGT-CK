@@ -1,10 +1,10 @@
 import java.util.Arrays;
 import java.util.Random;
-import java.util.ArrayList;
 
 public class WOA {
-    private static final Random random = new Random();
-
+    // Input: whale is a possible solution
+    // Output: sum of the square of the whale
+    // Description: Calculate the fitness function of the whale
     public static double fitnessFunction(double[] whale){
         double sum = 0;
         for (double j : whale) {
@@ -12,6 +12,12 @@ public class WOA {
         }
         return sum;
     }
+    // Input: N is the number of whales
+    //        ub is the upper bound
+    //        lb is the lower bound
+    //        dim is the dimension
+    // Output: The whale population
+    // Description: Generate the whale based on the upper bound and lower bound of the dimension
     public static double[][] generateWhale(int N,int ub, int lb, int dim) {
         double[][] whale = new double[N][dim];
         for (int i = 0; i < N; i++) {
@@ -21,6 +27,13 @@ public class WOA {
         }
         return whale;
     }
+    // Input: N is the number of whales
+    //        ub is the upper bound
+    //        lb is the lower bound
+    //        dim is the dimension
+    //        maxIteration is the maximum iteration
+    //Output: best whale and best whale position
+    //Description: Finding the best whale and best whale position based on the fitness function
     public static void whaleOptimizationAlgorithm(int N, int ub, int lb, int dim, int maxIteration) {
         double[][] whale = generateWhale(N,ub,lb,dim);
         double[] fitness = new double[N];
@@ -39,6 +52,7 @@ public class WOA {
         while (t < maxIteration){
             double a = 2 * (1 - (double) t / maxIteration);
             for (int i  = 0; i < N; i++){
+                Random random = new Random();
                 double r = random.nextDouble();
                 double A = r * 2 * a - a;
                 double C = 2 * r;
@@ -47,13 +61,13 @@ public class WOA {
                 double l = (random.nextDouble() * 2) - 1;
                 if(p < 0.5){
                     if(Math.abs(A) < 1){
-                        //Search for prey updating position (6)
+                        //Encircling for prey updating position (6)
                         for (int j = 0; j < dim; j++) {
                             whale[i][j] = bestWhalePosition[j] - A * Math.abs(C * bestWhalePosition[j] - whale[i][j]);
                         }
                     }
                     else if(Math.abs(A) >= 1){
-                        //Encircling prey updating position (13)
+                        //Searching for prey updating position (13)
                         int rand = random.nextInt(N);
                         while (rand == i){
                             rand = random.nextInt(N);
@@ -91,32 +105,13 @@ public class WOA {
     }
 
     public static void main(String[] args) {
-        int minDim = 300; // Minimum dimension to start with
-        int maxDim = 1000; // Maximum dimension to test
-        int step = (maxDim - minDim) / 100; // Step size to increase the dimension in each iteration
-        int N = 50; // Number of whales
-        int ub = 5; // Upper bound for the whale generation
-        int lb = -5; // Lower bound for the whale generation
-        int maxIteration = 100; // Maximum number of iterations
-
-        ArrayList<Integer> dimensionsTested = new ArrayList<>();
-        ArrayList<Long> executionTimes = new ArrayList<>();
-
-        for (int dim = minDim; dim <= maxDim; dim += step) {
-            System.out.println("Running Whale Optimization Algorithm with dimension = " + dim);
-            long startTime = System.currentTimeMillis();
-
-            whaleOptimizationAlgorithm(N, ub, lb, dim, maxIteration);
-
-            long endTime = System.currentTimeMillis();
-            long duration = endTime - startTime;
-            System.out.println("Execution time for dimension " + dim + ": " + duration + "ms");
-
-            dimensionsTested.add(dim);
-            executionTimes.add(duration);
-        }
-
-        System.out.println("Tested dimensions: " + dimensionsTested);
-        System.out.println("Execution times: " + executionTimes);
+        int N = 10000000;
+        int ub = 20;
+        int lb = -20;
+        int dim = 2;
+        int maxIteration = 200;
+        long startTime = System.currentTimeMillis();
+        whaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration);
+        System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + "ms");
     }
 }

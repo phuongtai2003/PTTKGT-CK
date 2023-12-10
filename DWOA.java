@@ -1,27 +1,30 @@
 import java.util.Arrays;
 import java.util.Random;
-import java.util.ArrayList;
 
 public class DWOA {
     private final static int[] setCosts = {50, 100, 20, 50, 30, 40, 60, 100, 80, 90};
-    private static final Random random = new Random();
-
+    // Input: setSelection is a possible solution
+    //        setCosts is the cost of each set
+    // Output: sum of the set cost
+    // Description: Calculate the fitness function of the set cover cost problem
     public static int setCoverCost(int[] setSelection, int[] setCosts) {
         int totalCost = 0;
         for (int i = 0; i < setSelection.length; i++) {
-            if (i >= setCosts.length) {
-                break;  // Avoid accessing an index out of bounds
-            }
             if (setSelection[i] == 1) {
                 totalCost += setCosts[i];
-                if (totalCost > 200) {
-                    return 0;
-                }
             }
         }
-        return (totalCost >= 100) ? totalCost : 0;
+        if(totalCost > 200){
+            return 0;
+        }
+        return totalCost;
     }
-
+    // Input: N is the number of whales
+    //        ub is the upper bound
+    //        lb is the lower bound
+    //        dim is the dimension
+    // Output: The whale population
+    // Description: Generate the whale based on the upper bound and lower bound of the dimension
     public static double[][] generateWhale(int N,int ub, int lb, int dim) {
         double[][] whale = new double[N][dim];
         for (int i = 0; i < N; i++) {
@@ -31,9 +34,16 @@ public class DWOA {
         }
         return whale;
     }
+    // Input: x is an element in a whale
+    // Output: vNew
+    // Description: Calculate the vNew
     public static double vNew(double x) {
         return Math.abs(Math.exp(x) - 1) / (Math.exp(x) + 1);
     }
+    // Input: X is a continuous whale
+    //        m is the maximum value in each whale
+    // Output: Y is the new discrete whale
+    // Description: Transfer from a continuous whale to a new discrete whale
     public static int[] phi(double[] X, int[] m) {
         int n = X.length;
         int[] Y = new int[n];
@@ -68,7 +78,14 @@ public class DWOA {
         }
         return Y;
     }
-
+    // Input: N is the number of whales
+    //        ub is the upper bound
+    //        lb is the lower bound
+    //        dim is the dimension
+    //        maxIteration is the maximum iteration
+    //        setCosts is the cost of each set
+    // Output: best whale and best whale position
+    // Description: Finding the best whale and best whale position based on the set cover cost problem
     public static void discreteWhaleOptimizationAlgorithm(int N, int ub, int lb, int dim, int maxIteration, int[] setCosts) {
         double [][] whale = generateWhale(N,ub,lb,dim);
         int[][] phiWhale = new int[N][dim];
@@ -97,6 +114,7 @@ public class DWOA {
         while (t < maxIteration){
             double a = 2 * (1 - (double) t / maxIteration);
             for (int i  = 0; i < N; i++){
+                Random random = new Random();
                 double r = random.nextDouble();
                 double A = r * 2 * a - a;
                 double C = 2 * r;
@@ -105,13 +123,13 @@ public class DWOA {
                 double l = (random.nextDouble() * 2) - 1;
                 if (p < 0.5){
                     if (Math.abs(A) < 1){
-                        //Search for prey updating position (6)
+                        //Encircling prey updating position (6)
                         for (int j = 0; j < dim; j++) {
                             whale[i][j] = bestWhalePositionX[j] - A * Math.abs(C * bestWhalePositionX[j] - whale[i][j]);
                         }
                     }
                     else if (Math.abs(A) >= 1){
-                        //Encircling prey updating position (13)
+                        //Searching for prey updating position (13)
                         int rand = random.nextInt(N);
                         while (rand == i){
                             rand = random.nextInt(N);
@@ -152,33 +170,11 @@ public class DWOA {
     }
 
     public static void main(String[] args) {
-        int N = 50; // Number of whales
-        int ub = 1; // Upper bound for the whale generation
-        int lb = 0; // Lower bound for the whale generation
-        int maxIteration = 100; // Maximum number of iterations
-
-        int minSetSize = 300; // Minimum set size to start with
-        int maxSetSize = 1000; // Maximum set size to test
-        int stepSize = (maxSetSize - minSetSize) / 100; // Step size for varying set sizes
-
-        ArrayList<Integer> setSizesTested = new ArrayList<>();
-        ArrayList<Long> executionTimes = new ArrayList<>();
-
-        for (int setSize = minSetSize; setSize <= maxSetSize; setSize += stepSize) {
-            System.out.println("Running DWOA with set size = " + setSize);
-            long startTime = System.currentTimeMillis();
-
-            discreteWhaleOptimizationAlgorithm(N, ub, lb, setSize, maxIteration, Arrays.copyOf(setCosts, setSize));
-
-            long endTime = System.currentTimeMillis();
-            long duration = endTime - startTime;
-            System.out.println("Execution time for set size " + setSize + ": " + duration + "ms");
-
-            setSizesTested.add(setSize);
-            executionTimes.add(duration);
-        }
-
-        System.out.println("Tested set sizes: " + setSizesTested);
-        System.out.println("Execution times: " + executionTimes);
+        int N = 100000;
+        int ub = 10;
+        int lb = 0;
+        int dim = 10;
+        int maxIteration = 100;
+        discreteWhaleOptimizationAlgorithm(N,ub,lb,dim,maxIteration, setCosts);
     }
 }
