@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -257,17 +258,23 @@ public class DiscountedKnapsackDWOA {
         int ub = 3;
         int lb = 0;
         int maxIteration = 500;
+        ArrayList<Integer> setSizesTested = new ArrayList<>();
+        ArrayList<Long> executionTimes = new ArrayList<>();
 
         for(int groupNum = minGroupNum; groupNum <= maxGroupNum; groupNum *= 10){
             int[][] generateResults = DataSetGenerator.generateForDiscountedKnapsack(groupNum, minValue, maxValue, minWeight, maxWeight);
             int[] weights = generateResults[0];
             int[] profits = generateResults[1];
             int itemCount = 3 * groupNum;
-
+            long startTime = System.currentTimeMillis();
             discreteWhaleOptimizationAlgorithm(N, ub, lb, itemCount, maxIteration, weights, profits);
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+            setSizesTested.add(groupNum);
+            executionTimes.add(executionTime);
         }
 
-
-
+        System.out.println("Set sizes tested: " + setSizesTested);
+        System.out.println("Execution times: " + executionTimes);
     }
 }
